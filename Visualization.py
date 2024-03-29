@@ -13,3 +13,11 @@ plt.ylabel("Predicted Sentiment Models")
 
 plt.savefig('fig_sentiment_forex_correlation.png', dpi=300)
 plt.show()
+
+# added visualization
+plt.figure(figsize=(10, 8))
+sns.heatmap(compact_correlation_df, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+plt.title('Correlation Matrix: Sentiment vs. Daily Returns')
+plt.xticks(rotation=45)
+plt.savefig('correlation_heatmap.png')
+plt.show()
