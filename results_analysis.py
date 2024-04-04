@@ -61,7 +61,7 @@ print("-" * 50)
 """
 
 # Plot Correlation Matrix
-corr_matrix = df[cols_sent].corr()
+"""corr_matrix = df[cols_sent].corr()
 
 plt.figure(figsize=(10, 8))
 sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, vmin=-1, vmax=1)
@@ -70,13 +70,16 @@ plt.xticks(rotation=45)
 plt.yticks(rotation=0)
 plt.tight_layout()
 plt.savefig('correlation_heatmap.png', dpi=300)
-plt.show()
+plt.show()"""
 
 # Plotting Additional Correlation Plots
-plt.figure(figsize=(12, 8))
+num_models = len(cols_sent[1:])
+num_rows = (num_models + 2) // 3  # Adjust the number of rows based on the number of models
+
+plt.figure(figsize=(12, 6 * num_rows))
 
 for i, col in enumerate(cols_sent[1:], 1):
-    plt.subplot(2, 3, i)
+    plt.subplot(num_rows, 3, i)
     plt.scatter(df[col], df['true_sentiment'], alpha=0.5)
     plt.xlabel(col.replace('_sentiment', '').upper())
     plt.ylabel('True Sentiment')
@@ -86,6 +89,22 @@ plt.tight_layout()
 plt.savefig('additional_correlation_plots.png', dpi=300)
 plt.show()
 
+# Plot Cumulative Distribution Function (CDF)
+plt.figure(figsize=(10, 6))
+
+for model in cols_sent[1:]:
+    sorted_sentiments = np.sort(df[model])
+    cdf = np.arange(1, len(sorted_sentiments) + 1) / float(len(sorted_sentiments))
+    plt.plot(sorted_sentiments, cdf, label=model.replace('_sentiment', '').upper())
+
+plt.xlabel('Sentiment Score')
+plt.ylabel('Cumulative Probability')
+plt.title('Cumulative Distribution Function (CDF) of Predicted Sentiments')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig('sentiment_cdf.png', dpi=300)
+plt.show()
 """
 Updates:
 Optimize Imports:
@@ -99,4 +118,13 @@ Optimize DataFrame operations to reduce redundancy and improve performance.
 Plotting Improvements:
 Adjust the plot settings for better visualization, including rotating x-axis labels in the correlation heatmap.
 Refactoring and Code Organization:
-Refactor the code for better readability and organization, including comments for clarity."""
+Refactor the code for better readability and organization, including comments for clarity.
+
+Regarding the plots we are dynamically calculating and plotting the perfomance metrics
+for each sentiment model.  we have metrics such as abs error, acc, f1 score 
+we have scatter plots for correlation of each sentiment model and actual label
+the CDF plots are for the compairison of the sneitment score
+
+Issues i can only plot one plot at a time
+the accuracy doesnt seem to vary much after the changes although the code is now op
+"""
