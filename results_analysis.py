@@ -29,19 +29,14 @@ for model in cols_sent[1:]:
     
     for key, value in report.items():
         if isinstance(value, dict):
-            # If the value is a dictionary, print its items directly
-            print(f"{key}:")
-            for k, v in value.items():
-                if isinstance(v, (int, float)):  # Check if the value is numerical
-                    print(f"  {k}: {round(v, 3)}")  # Round the numerical value
-                else:
-                    print(f"  {k}: {v}")  # Print as it is if not numerical
-        elif isinstance(value, (int, float)):  # Check if the value is numerical
-            print(f"{key}: {round(value, 3)}")  # Round the numerical value
+            # If the value is a dictionary, iterate through its items and round numerical values
+            rounded_values = {k: round(v, 3) if isinstance(v, (int, float)) else v for k, v in value.items()}
+            print(rounded_values)
         else:
-            print(f"{key}: {value}")  # Print as it is if not numerical
+            print(key, ":", round(value, 3))
     
     print("-" * 50)
+
 
 """
 # Calculate metrics for each model
@@ -64,64 +59,6 @@ print("-" * 50)
 print(metrics_df.round(3))
 print("-" * 50)
 """
-# Plot Correlation Matrix
-corr_matrix = df[cols_sent].corr()
-plt.figure(figsize=(12, 10))
-sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, vmin=-1, vmax=1)
-plt.xticks(rotation=45)
-plt.title("Correlation Matrix: Sentiment vs. Daily Returns")
-plt.savefig('fig_res_corr.png', dpi=500)
-
-# Calculate and print classification report for each model
-for model in cols_sent[1:]:
-    print(f"Classification report for {model.upper()}:")
-    report = classification_report(df['true_sentiment'], df[model], output_dict=True)
-    print({key: round(value, 3) for key, value in report.items()})
-    print("-" * 50)
-
-# Daily Sentiment Analysis
-print('Daily Sentiment Analysis')
-print("#" * 50)
-
-# Merge sentiment dataframes
-merged_df = pd.merge(df, df2, on=['published_at', 'ticker'], how='outer', suffixes=('', '_day'))
-
-# Group by date and ticker
-grouped_df = merged_df.groupby(['published_at', 'ticker']).agg({
-    'true_sentiment': 'sum',
-    'finbert_sentiment': 'sum',
-    'finbert_sentiment_a': 'sum',
-    'gpt_sentiment_p1': 'sum',
-    'gpt_sentiment_p2': 'sum',
-    'gpt_sentiment_p3': 'sum',
-    'gpt_sentiment_p4': 'sum',
-    'gpt_sentiment_p5': 'sum',
-    'gpt_sentiment_p6': 'sum',
-    'gpt_sentiment_p7': 'sum',
-    'finbert_sentiment_n': 'sum',
-    'finbert_sentiment_a_n': 'sum',
-    'gpt_sentiment_p1n': 'sum',
-    'gpt_sentiment_p2n': 'sum',
-    'gpt_sentiment_p3n': 'sum',
-    'gpt_sentiment_p4n': 'sum',
-    'gpt_sentiment_p5n': 'sum',
-    'gpt_sentiment_p6n': 'sum',
-    'gpt_sentiment_p7n': 'sum',
-    'daily_returns': 'mean'
-}).reset_index()
-
-# Calculate Naive Sentiment
-grouped_df['naive_sentiment'] = grouped_df.groupby('ticker')['true_sentiment'].transform(lambda x: x.mode().iloc[0])
-
-# Calculate correlation between sentiment and returns
-correlation_df = grouped_df[cols_sent + ['daily_returns']].corr()['daily_returns']
-
-# Print correlation results
-print('Correlation of Predicted Sentiment and Forex pair returns')
-print("-" * 50)
-print(correlation_df)
-print("-" * 50)
-
 
 # Plot Correlation Matrix
 corr_matrix = df[cols_sent].corr()
@@ -148,7 +85,10 @@ for i, col in enumerate(cols_sent[1:], 1):
 plt.tight_layout()
 plt.savefig('additional_correlation_plots.png', dpi=300)
 plt.show()
-"""Optimize Imports:
+
+"""
+Updates:
+Optimize Imports:
 Import only necessary functions from libraries to reduce memory usage and improve code readability.
 Use Groupby and Aggregation:
 Utilize groupby and aggregation functions like agg to compute metrics more efficiently instead of looping through each ticker.
