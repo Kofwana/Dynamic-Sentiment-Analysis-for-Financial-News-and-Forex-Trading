@@ -1,12 +1,24 @@
+import openai
+import json
 import pandas as pd
-import numpy as np
+from helper_functions_modular import load_prompts
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 import warnings
-from helper_functions import cols_sent, sentiment_mae, highlight_max, highlight_min, cols_sent_day
-
+from helper_functions_modular import cols_sent, sentiment_mae, highlight_max, highlight_min, cols_sent_day
 warnings.filterwarnings("ignore")
+# Define your API key management based on your requirements
+API_KEY = '<YOUR_API_KEY>'
+openai.api_key = API_KEY
+
+def load_prompts():
+    with open('prompts.json', 'r') as file:
+        prompts = json.load(file)
+    return prompts
+
+# Load prompts using the load_prompts function
+prompts = load_prompts('prompts.json')
 
 df = pd.read_csv('sentiment_predictions_single_article.csv', parse_dates=True)
 df2 = pd.read_csv('sentiment_predictions_allday_articles.csv', parse_dates=True)
