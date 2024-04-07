@@ -8,6 +8,15 @@ import json
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def extract_sentiment(sentiment: str):
+    sentiment = sentiment.lower()
+    if "positive" in sentiment or "buy" in sentiment:
+        return "Positive"
+    elif "negative" in sentiment or "sell" in sentiment:
+        return "Negative"
+    else:
+        return "Neutral"
+
 
 def get_sentiment(ticker, content, prompt_type, prompts_file='prompts.json', max_retries=5):
     """
@@ -58,8 +67,10 @@ def get_sentiment(ticker, content, prompt_type, prompts_file='prompts.json', max
             end_time = time.time()
             response_time = end_time - start_time
 
-            return response.choices[0].message.content, response.usage['completion_tokens'], response.usage[
-                'prompt_tokens'], response_time
+            # Extract sentiment from response
+            sentiment = extract_sentiment(response.choices[0].message.content)
+
+            return sentiment, response.usage['completion_tokens'], response.usage['prompt_tokens'], response_time
         except Exception as e:
             logger.error(f"Error while processing '{content}' (Retry {retry + 1}/{max_retries}): {e}")
             if retry < max_retries - 1:
@@ -70,7 +81,7 @@ def get_sentiment(ticker, content, prompt_type, prompts_file='prompts.json', max
                 return np.NaN, np.NaN, np.NaN, np.NaN
 
 
-def extract_sentiment(sentiment: str):
+"""def extract_sentiment(sentiment: str):
     sentiment = sentiment.lower()
     if "positive" in sentiment:
         return "Positive"
@@ -84,7 +95,7 @@ def extract_sentiment(sentiment: str):
         return "Positive"
     else:
         return sentiment
-
+"""
 
 def sentiment_to_numeric(sentiment: str):
     sentiment = sentiment.lower()

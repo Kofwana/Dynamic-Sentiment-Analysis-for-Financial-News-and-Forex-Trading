@@ -1,3 +1,6 @@
+
+---
+
 # Dynamic Sentiment Analysis for Financial News and Forex Trading
 
 ## Project Overview
@@ -17,6 +20,24 @@ This project aims to enhance the existing codebase for dynamic sentiment analysi
 ### 3. Result Visualization
 - Added functionality to visualize and analyze the results using matplotlib and seaborn libraries.
 - Included heatmap visualization for correlation analysis between sentiment predictions and daily forex returns.
+- Generated additional correlation plots to explore relationships between sentiment scores and true sentiment labels.
+
+## Observed Enhancements
+
+The enhancements made to the codebase resulted in significant improvements in sentiment analysis accuracy and performance evaluation. Notable changes include:
+- Improved precision, recall, and F1-scores across FinBERT and GPT sentiment analysis models.
+- Reduced sentiment Mean Absolute Error (MAE) values, indicating better alignment between predicted and true sentiment labels.
+
+## Additional Plots and Insights
+
+### Heatmap: Correlation Matrix
+The heatmap visualization of the correlation matrix provides insights into the relationships between sentiment predictions from different models and their impact on daily forex returns. Strong correlations can indicate potential trading signals or sentiment-driven market movements.
+
+### Scatter Plots: Correlation Analysis
+Additional scatter plots illustrate the correlation between individual sentiment scores (e.g., FinBERT, GPT-P1, GPT-P2) and true sentiment labels. These plots help identify patterns and trends in sentiment analysis accuracy across different models and sentiment categories.
+
+### Cumulative Distribution Function (CDF) Plot
+The CDF plot showcases the distribution of predicted sentiment scores, offering a comprehensive view of sentiment variability and confidence levels across different sentiment analysis models.
 
 ## Goal of the Project
 
@@ -31,7 +52,7 @@ The primary goal of this project is to build a robust sentiment analysis system 
 The project structure includes the following files and directories:
 - `helper_functions.py`: Contains helper functions for sentiment analysis, data handling, and result extraction.
 - `prompts.json`: JSON file with prompts for different types of sentiment analysis tasks.
-- `sentiment_analysis.py`: Main script for sentiment analysis using machine learning models and result visualization.
+- `results_analysis.py`: Main script for sentiment analysis using machine learning models, result visualization, and performance metrics calculation.
 - `README.md`: Project documentation file explaining improvements, goals, and usage instructions.
 
 ## Getting Started
@@ -54,7 +75,7 @@ The project structure includes the following files and directories:
    - Modify the code as needed, such as adding your OpenAI API key in the appropriate file.
    - Execute the main script for sentiment analysis:
      ```bash
-     python sentiment_analysis.py
+     python results.py
      ```
 
 3. **Result Interpretation:**
@@ -62,8 +83,8 @@ The project structure includes the following files and directories:
 
 ## Contributors
 
-- Kofwana Lawson 
-- Vydeepthi Dhulipalla 
+- Kofwana Lawson
+- Vydeepthi Dhulipalla
 
 ---
 

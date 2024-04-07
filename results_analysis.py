@@ -16,6 +16,7 @@ df2 = pd.read_csv('sentiment_predictions_allday_articles.csv', parse_dates=['pub
 cols_sent = ['true_sentiment', 'finbert_sentiment', 'finbert_sentiment_a', 'gpt_sentiment_p1',
              'gpt_sentiment_p2', 'gpt_sentiment_p3', 'gpt_sentiment_p4', 'gpt_sentiment_p7']
 
+# Modified the classification metrics dataframe to include Mean Absolute Error (MAE) alongside other metrics.
 # Classification Metrics
 classification_metrics = {
     'Model': ['FinBERT', 'FinBERT-A', 'GPT-P1', 'GPT-P2', 'GPT-P3', 'GPT-P4', 'GPT-P4A'],
@@ -35,33 +36,15 @@ for model in cols_sent[1:]:
         else:
             print(key, ":", round(value, 3))
     
+    # Calculate and print MAE
+    mae = sentiment_mae(df['true_sentiment'], df[model])
+    print("MAE:", round(mae, 3))
+    
     print("-" * 50)
 
 
-"""
-# Calculate metrics for each model
-model_metrics = []
-for model in cols_sent[1:]:
-    model_name = model.replace('_sentiment', '').upper()
-    accuracy = accuracy_score(df['true_sentiment'], df[model])
-    precision = precision_score(df['true_sentiment'], df[model], average='weighted')
-    recall = recall_score(df['true_sentiment'], df[model], average='weighted')
-    f1 = f1_score(df['true_sentiment'], df[model], average='weighted')
-    mae = sentiment_mae(df['true_sentiment'], df[model])
-    model_metrics.append([model_name, accuracy, precision, recall, f1, mae])
-
-# Create DataFrame for classification metrics
-metrics_df = pd.DataFrame(model_metrics, columns=['Model', 'Accuracy', 'Precision', 'Recall', 'F1-Score', 'S-MAE'])
-
-# Print classification results
-print('Performance Results in Sentiment Classification')
-print("-" * 50)
-print(metrics_df.round(3))
-print("-" * 50)
-"""
-
 # Plot Correlation Matrix
-"""corr_matrix = df[cols_sent].corr()
+corr_matrix = df[cols_sent].corr()
 
 plt.figure(figsize=(10, 8))
 sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, vmin=-1, vmax=1)
@@ -70,11 +53,11 @@ plt.xticks(rotation=45)
 plt.yticks(rotation=0)
 plt.tight_layout()
 plt.savefig('correlation_heatmap.png', dpi=300)
-plt.show()"""
+plt.show()
 
 # Plotting Additional Correlation Plots
 num_models = len(cols_sent[1:])
-num_rows = (num_models + 2) // 3  # Adjust the number of rows based on the number of models
+num_rows = (num_models + 1) // 3  # made 3
 
 plt.figure(figsize=(12, 6 * num_rows))
 
@@ -123,8 +106,10 @@ Refactor the code for better readability and organization, including comments fo
 Regarding the plots we are dynamically calculating and plotting the perfomance metrics
 for each sentiment model.  we have metrics such as abs error, acc, f1 score 
 we have scatter plots for correlation of each sentiment model and actual label
-the CDF plots are for the compairison of the sneitment score
+the CDF plots are for the compairison of the senti score
 
 Issues i can only plot one plot at a time
 the accuracy doesnt seem to vary much after the changes although the code is now op
+make note of the higest and lowest acc sentiment model
+
 """
